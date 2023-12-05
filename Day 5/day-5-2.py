@@ -1,6 +1,3 @@
-from random import seed
-
-
 input = open('input2.txt', 'r')
 lines = input.readlines()
 seedRanges = [int(x) for x in lines[0][7:].split()]
