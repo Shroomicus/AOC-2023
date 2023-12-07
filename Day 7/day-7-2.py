@@ -62,13 +62,6 @@ def handStrength(hand):
     
     return 0
 
-# for i in inp:
-#     print(i[0])
-#     print(handStrength(i[0]))
-    
-# print(handStrength('JJ3AA'))
-# exit()
-
 inp.sort(key=cmp_to_key(compare))
 print(inp)
 
@@ -77,9 +70,3 @@ total = 0
 for i in range(len(inp)):
     total += int(inp[i][1])*(i+1)
 print(total)
-
-
-
-'254879637'
-'255287056'
-'255632664'
