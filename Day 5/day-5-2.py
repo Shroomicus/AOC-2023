@@ -1,3 +1,9 @@
+import time
+
+# get the start time
+st = time.time()
+
+
 input = open('input2.txt', 'r')
 lines = input.readlines()
 seedRanges = [int(x) for x in lines[0][7:].split()]
@@ -72,3 +78,11 @@ for seed in seeds:
     if(seed[0] < low):
         low = seed[0]
 print(low)
+
+
+# get the end time
+et = time.time()
+
+# get the execution time
+elapsed_time = et - st
+print('Execution time:', elapsed_time, 'seconds')
