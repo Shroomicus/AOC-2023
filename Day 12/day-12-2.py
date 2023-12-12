@@ -4,7 +4,8 @@ lines = input.readlines()
 def getNext(unknown, expected, state):
     next = []
     if(unknown[state[0]] != '.'):
-        next.append((state[0]+1, state[1]+1, state[2]))
+        if(state[1] < expected[state[2]]):
+            next.append((state[0]+1, state[1]+1, state[2]))
     if(unknown[state[0]] != '#'):
         if(state[1] > 0):
             next.append((state[0]+1, 0, state[2]+1))
@@ -20,7 +21,7 @@ def knownData(line):
     return [x.count('#') for x in line.replace('.', ' ').split()]
 
 res = 0
-for line in lines[:1]:
+for line in lines[1:2]:
     queue = []
     total = 0
     unknown, expected = line.replace('\n', '').split()
@@ -39,11 +40,12 @@ for line in lines[:1]:
         print(curr)
         neighbors = getNext(unknown, expected, curr)
         for i in neighbors:
-            print(i[0])
+            # print(i[0])
             if(i[0] == len(unknown)-1):
+                res += 1
                 continue
             queue.append(i)
-        print()
+        # print()
 
 print("\n" + str(res))
 
