@@ -1,59 +1,60 @@
-input = open('input2.txt', 'r')
+input = open('input.txt', 'r')
 lines = input.readlines()
 
-def getNext(unknown, expected, state):
-    next = []
-    if(unknown[state[0]] == '.'):
-        if(state[1] == expected[state[2]]):
-            next.append((state[0]+1, 0, state[2]+1))
-        else:
-            next.append((state[0]+1, 0, state[2]))
-    if(unknown[state[0]] == '#'):
-        if(state[1] < expected[state[2]]):
-            next.append((state[0]+1, state[1]+1, state[2]))
-    if(unknown[state[0]] == '?'):
-        if(state[1] < expected[state[2]]):
-            next.append((state[0]+1, state[1]+1, state[2]))
-        elif(state[1] == expected[state[2]]):
-            next.append((state[0]+1, 0, state[2]+1))
-        next.append((state[0]+1, 0, state[2]))
-    
-    return next
-
-def getData(line):
-    return [x.count('#') - x.count('?') for x in line.replace('.', ' ').replace('?', " ? ").split()]
-
-def knownData(line):
-    return [x.count('#') for x in line.replace('.', ' ').split()]
+from collections import defaultdict
 
 res = 0
 for line in lines:
-    queue = []
-    total = 0
+    states = {}
     unknown, expected = line.replace('\n', '').split()
-    # unknown = "?".join(unknown for _ in range(5))
-    # expected = tuple(int(x) for x in expected.split(','))*5
-    expected = tuple(int(x) for x in expected.split(','))
+    unknown = "?".join(unknown for _ in range(5))
+    expected = tuple(int(x) for x in expected.split(','))*5
+    # expected = tuple(int(x) for x in expected.split(','))
     print(unknown)
     print(str(expected) + "\n")
 
+    # Current in group, group num
     if(unknown[0] != '.'):
-        queue.append((1, 1, 0))
+        states[(1, 0)] = 1
     if(unknown[0] != '#'):
-        queue.append((1, 0, 0))
+        states[(0, 0)] = 1
+    
+    for ind in range(1, len(unknown)):
+        newStates = defaultdict(int)
+        if(unknown[ind] == '#'):
+            for state in states:
+                if(state[0] < expected[state[1]]):
+                    newStates[(state[0] + 1, state[1])] += states[state]
+        if(unknown[ind] == '.'):
+            for state in states:
+                if(state[0] == 0):
+                    newStates[(state[0], state[1])] += states[state]
+                if(state[0] == expected[state[1]]):
+                    if(state[1]+1 < len(expected)):
+                        newStates[(0, state[1]+1)] += states[state]
+                    else:
+                        newStates[(state[0], state[1])] += states[state]
+        if(unknown[ind] == '?'):
+            for state in states:
+                if(state[0] == 0):
+                    newStates[(state[0], state[1])] += states[state]
+                if(state[0] == expected[state[1]]):
+                    if(state[1]+1 < len(expected)):
+                        newStates[(0, state[1]+1)] += states[state]
+                    else:
+                        newStates[(state[0], state[1])] += states[state]
+                if(state[0] < expected[state[1]]):
+                    newStates[(state[0] + 1, state[1])] += states[state]
 
-    while(len(queue) > 0):
-        curr = queue.pop(0)
-        # print(curr)
-        neighbors = getNext(unknown, expected, curr)
-        for i in neighbors:
-            if(i[0] == len(unknown)-1):
-                if(i[2] == len(expected)-1):
-                    if(i[1] == expected[-1]):
-                        res += 1
-                continue
-            queue.append(i)
-        # print()
+        states = newStates
+    
+    total = 0
+    for i in states:
+        if(i[1] == len(expected)-1 and i[0] == expected[-1]):
+            total += states[i]
+    print(total)
+    res += total
+
 
 print("\n" + str(res))
 
