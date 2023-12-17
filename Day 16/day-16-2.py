@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-input = open('input.txt', 'r')
+input = open('input2.txt', 'r')
 lines = input.readlines()
 
 shifts = {
@@ -38,14 +38,14 @@ for line in map:
         res += char
     print(res)
 
-def getEnergy():
+def getEnergy(startingBeam):
     energyMap = []
     for line in map:
         energyMap.append([])
         for char in line:
             energyMap[-1].append('.')
     seen = defaultdict(set)
-    beams = [((0, 0), (0, 1))]
+    beams = [startingBeam]
     while(len(beams) > 0):
         beam = beams.pop(0)
         pos = [beam[0][0], beam[0][1]]
@@ -74,7 +74,7 @@ def getEnergy():
             beams.append(((pos[0] + dir[0], pos[1] + dir[1]), dir))
     total = 0
 
-    print()
+    # print()
     # for line in range(len(map)):
     #     res = ""
     #     for char in range(len(map[line])):
@@ -91,6 +91,29 @@ def getEnergy():
             res += char
             if(char == '#'):
                 total += 1
-        print(res)
+        # print(res)
     return total
 
+max = 0
+maxConfig = None
+for i in range(len(map)):
+    energy = getEnergy(((i, 0), (0, 1)))
+    if(max < energy):
+        max = energy
+        maxConfig = ((i, 0), (0, 1))
+    energy = getEnergy(((len(map) - 1 - i, 0), (0, -1)))
+    if(max < energy):
+        max = energy
+        maxConfig = ((len(map) - 1 - i, 0), (0, -1))
+
+for i in range(len(map[0])):
+    energy = getEnergy(((0, i), (1, 0)))
+    if(max < energy):
+        max = energy
+        maxConfig = ((0, i), (1, 0))
+    energy = getEnergy(((0, len(map[0]) - 1 - i), (-1, 0)))
+    if(max < energy):
+        max = energy
+        maxConfig = ((0, len(map[0]) - 1 - i), (-1, 0))
+print(max)
+print(maxConfig)
