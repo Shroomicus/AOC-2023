@@ -20,13 +20,19 @@ moveChars = {
 
 processedMoves = []
 for inst in instList:
-    # data = inst.split()[2]
-    # print(moves[data[-2]])
-    # print(int(data[2:len(data)-2], 16))
-    data = inst.split()
-    move = moveChars[data[0]]
-    mult = int(data[1])
-    processedMoves.append((move, mult, data[0]))
+    data = inst.split()[2]
+    print(moves[data[-2]])
+    move = moves[data[-2]]
+    print(int(data[2:len(data)-2], 16))
+    mult = int(data[2:len(data)-2], 16)
+    processedMoves.append((move, mult))
+    
+    # data = inst.split()
+    # move = moveChars[data[0]]
+    # mult = int(data[1])
+    # processedMoves.append((move, mult, data[0]))
+    # print((move, mult, data[0]))
+    # exit()
 
 minVals = [0, 0]
 maxVals = [0, 0]
@@ -70,10 +76,13 @@ for i in range(len(currInds) // 2):
     val = currInds[(i*2)+1] - currInds[i*2] + 1
     total += val
 
+
 for row in range(minVals[0]+1, maxVals[0]):
+
+    print(row)
     shiftmap[row].sort(key = lambda x : x[1])
-    print()
-    print(shiftmap[row])
+    # print()
+    # print(shiftmap[row])
 
     for ind in map[row]:
         if ind in currInds:
@@ -82,11 +91,11 @@ for row in range(minVals[0]+1, maxVals[0]):
             currInds.append(ind)
     currInds.sort()
 
-    print(currInds)
+    # print(currInds)
     for i in range(len(currInds) // 2):
         val = currInds[(i*2)+1] - currInds[i*2] + 1
         total += val
-        print(val)
+        # print(val)
 
     for i in shiftmap[row]:
         if(i[1] < i[0]):
