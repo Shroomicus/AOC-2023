@@ -77,11 +77,14 @@ queue = [(inters[0], 0, set())]
 while(len(queue) > 0):
     curr = queue.pop(0)
     curr[2].add(curr[0])
-    key = (curr[0], list(curr[2]).sort(key=lambda x: x[0] + x[1]*len(map)))
-    if(curr[1] < 2000 and maxes[key] > curr[1]):
-        print(maxes[key])
-        print(curr[1])
-        print("WHAT HTE FUCK")
+    visits = list(curr[2])
+    visits.sort(key=lambda x: x[0] + x[1]*len(map))
+    key = (curr[0], tuple(visits))
+    if(maxes[key] > curr[1]):
+        # print(key)
+        # print(maxes[key])
+        # print(curr[1])
+        # print("WHAT HTE FUCK")
         continue
     maxes[key] = curr[1]
     if(curr[0] == connections[inters[1]][0][0]):
